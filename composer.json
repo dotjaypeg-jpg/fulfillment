@@ -1,0 +1,26 @@
+{
+    "name": "chargefield/fulfillment",
+    "description": "Vendor-agnostic print-on-demand fulfillment layer (Gelato, Printful, manual/Canada Post) shared across Chargefield Inc. storefronts.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.3",
+        "illuminate/contracts": "^13.0",
+        "illuminate/http": "^13.0",
+        "illuminate/support": "^13.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Chargefield\\Fulfillment\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Chargefield\\Fulfillment\\FulfillmentServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
