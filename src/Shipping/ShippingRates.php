@@ -2,6 +2,7 @@
 
 namespace Chargefield\Fulfillment\Shipping;
 
+use Chargefield\Fulfillment\Contracts\LabelCarrier;
 use Chargefield\Fulfillment\Contracts\ShippingCarrier;
 use Chargefield\Fulfillment\Data\Address;
 use Chargefield\Fulfillment\Data\ShippingRate;
@@ -60,5 +61,21 @@ class ShippingRates
         }
 
         return $carriers;
+    }
+
+    /**
+     * The first enabled carrier that can buy labels, or null when none can.
+     * Same registry/config seam as rates() — enabling a label-capable carrier
+     * (Canada Post, Stallion) is all it takes for the "buy a label" flow to work.
+     */
+    public function labelCarrier(): ?LabelCarrier
+    {
+        foreach ($this->carriers() as $carrier) {
+            if ($carrier instanceof LabelCarrier) {
+                return $carrier;
+            }
+        }
+
+        return null;
     }
 }
