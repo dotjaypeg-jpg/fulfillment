@@ -78,4 +78,37 @@ class ShippingRates
 
         return null;
     }
+
+    /**
+     * The label-capable carrier offering the cheapest rate to $destination for
+     * $totalWeightGrams — quote each, compare their lowest option, pick the winner.
+     * A carrier that can't quote (unconfigured, or a transient error — rates()
+     * returns []) is skipped. Returns null when none can quote, so the caller can
+     * fall back to {@see labelCarrier()}.
+     */
+    public function cheapestLabelCarrier(Address $destination, int $totalWeightGrams): ?LabelCarrier
+    {
+        $best = null;
+        $bestAmount = null;
+
+        foreach ($this->carriers() as $carrier) {
+            if (! $carrier instanceof LabelCarrier) {
+                continue;
+            }
+
+            $cheapest = null;
+            foreach ($carrier->rates($destination, $totalWeightGrams) as $rate) {
+                if ($cheapest === null || $rate->amount < $cheapest) {
+                    $cheapest = $rate->amount;
+                }
+            }
+
+            if ($cheapest !== null && ($bestAmount === null || $cheapest < $bestAmount)) {
+                $bestAmount = $cheapest;
+                $best = $carrier;
+            }
+        }
+
+        return $best;
+    }
 }
